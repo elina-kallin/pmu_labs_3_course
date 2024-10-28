@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -46,24 +48,26 @@ class MyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = [
-      _CardPostData("Первая из списка карточек ыть", imageUrl: "./assets/images/popug.jpg"),
-      _CardPostData("Вторая из списка карточек ыть", imageUrl: "./assets/images/popug.jpg"),
-      _CardPostData("Третья из списка каточек ыть", imageUrl: "./assets/images/popug.jpg"),
+      _CardPostData("Первая из списка карточек ыть",
+          imageUrl: "./assets/images/popug1.jpg"),
+      _CardPostData("Вторая из списка карточек ыть",
+          imageUrl: "./assets/images/popug2.jpg"),
+      _CardPostData("Третья из списка каточек ыть",
+          imageUrl: "./assets/images/mem3.jpg"),
     ];
     return Center(
         child: SingleChildScrollView(
             child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: data.map((e) => _CardPost.fromData(e)).toList(),
-        //           _CardPost('jfbjdf'),
-        //           _CardPost('fdg'),
-        //           _CardPost('sfgsf'),
-
+      //           _CardPost('jfbjdf'),
+      //           _CardPost('fdg'),
+      //           _CardPost('sfgsf'),
     )));
   }
 }
 
-class _CardPost extends StatelessWidget {
+class _CardPost extends StatefulWidget {
   final String description;
   final String? imageUrl;
 
@@ -71,6 +75,28 @@ class _CardPost extends StatelessWidget {
 
   factory _CardPost.fromData(_CardPostData data) =>
       _CardPost(data.description, imageUrl: data.imageUrl);
+
+  @override
+  State<_CardPost> createState() => _CardPostState();
+}
+
+class _CardPostState extends State<_CardPost> {
+  bool isLiked = false;
+  double iconScale = 1.0;
+
+  void _onLikeTap() {
+    setState(() {
+      isLiked = !isLiked;
+      iconScale = 1.3; // Increase scale temporarily
+    });
+
+    // Reset the scale back to normal after 250 milliseconds
+    Timer(const Duration(milliseconds: 250), () {
+      setState(() {
+        iconScale = 1.0;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,42 +122,66 @@ class _CardPost extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Flexible(
-                child: Text(
-                  description,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
+      child: IntrinsicHeight(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    widget.description,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // IMAGE ROW
+
+            const SizedBox(height: 10),
+            if (widget.imageUrl != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(
+                  widget.imageUrl!,
+                  height: 150,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: GestureDetector(
+                  onTap: _onLikeTap,
+                  child: AnimatedScale(
+                    scale: iconScale,
+                    duration: const Duration(milliseconds: 250),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child: !isLiked
+                          ? const Icon(
+                              Icons.favorite_border,
+                              color: Colors.black,
+                              key: ValueKey<int>(0),
+                            )
+                          : const Icon(
+                              Icons.favorite,
+                              color: Colors.orange,
+                              key: ValueKey<int>(1),
+                            ),
+                    ),
                   ),
                 ),
               ),
-            ],
-          ),
-          // IMAGE ROW
-          const SizedBox(height: 10),
-          if (imageUrl != null)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(imageUrl!, height: 150, width: double.infinity, fit: BoxFit.cover),
             ),
-
-          const Padding(
-            padding: EdgeInsets.all(4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(Icons.favorite, color: Colors.pink),
-                Icon(Icons.comment, color: Colors.white),
-                Icon(Icons.share, color: Color.fromARGB(255, 15, 11, 90)),
-              ],
-            ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
