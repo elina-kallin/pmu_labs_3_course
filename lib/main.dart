@@ -87,11 +87,11 @@ class _CardPostState extends State<_CardPost> {
   void _onLikeTap() {
     setState(() {
       isLiked = !isLiked;
-      iconScale = 1.3; // Increase scale temporarily
+      iconScale = 2.0; // Increase scale temporarily
     });
 
     // Reset the scale back to normal after 250 milliseconds
-    Timer(const Duration(milliseconds: 250), () {
+    Timer(const Duration(milliseconds: 110), () {
       setState(() {
         iconScale = 1.0;
       });
@@ -145,14 +145,32 @@ class _CardPostState extends State<_CardPost> {
             if (widget.imageUrl != null)
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.asset(
-                  widget.imageUrl!,
-                  height: 150,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          offset: Offset(
+                            0.0,
+                            2.0,
+                          ),
+                          blurRadius: 4.0,
+                          spreadRadius: 1.0,
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.asset(
+                        widget.imageUrl!,
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
+                    )),
               ),
-
+            const Spacer(),
             Align(
               alignment: Alignment.bottomRight,
               child: Padding(
