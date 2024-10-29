@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
+import 'package:pmu_labs/domain/models/card.dart';
 import 'package:flutter/material.dart';
+import 'package:pmu_labs/presentation/details_page/details_page.dart';
 
 part 'card.dart';
 
@@ -34,20 +37,34 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = [
-      _CardPostData("Первая из списка карточек ыть",
+      CardPostData("Первая из списка карточек ыть",
           imageUrl: "./assets/images/popug1.jpg"),
-      _CardPostData("Вторая из списка карточек ыть",
+      CardPostData("Вторая из списка карточек ыть",
           imageUrl: "./assets/images/popug2.jpg"),
-      _CardPostData("Третья из списка каточек ыть",
+      CardPostData("Третья из списка каточек ыть",
           imageUrl: "./assets/images/mem3.jpg"),
-      _CardPostData("нет, он не кловун", imageUrl: "./assets/images/mem4.jpg"),
+      CardPostData("нет, он не кловун", imageUrl: "./assets/images/mem4.jpg"),
     ];
     return Center(
         child: SingleChildScrollView(
             child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: data.map((e) => _CardPost.fromData(e, onLike: (title, isLiked) => _showSnackBar(context, title, isLiked),)).toList(),
+      children: data.map((data) {
+        return _CardPost.fromData(
+          data,
+          onLike: (String title, bool isLiked) =>
+              _showSnackBar(context, title, isLiked),
+          onTap: () => _navToDetails(context, data),
+        );
+      }).toList(),
     )));
+  }
+
+  void _navToDetails(BuildContext context, CardPostData data) {
+    Navigator.push(
+      context,
+      CupertinoPageRoute(builder: (context) => DetailsPage(data)),
+    );
   }
 
   void _showSnackBar(BuildContext context, String title, bool isLiked) {
@@ -61,7 +78,7 @@ class Body extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.amber,
-        duration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 2),
       ));
     });
   }
