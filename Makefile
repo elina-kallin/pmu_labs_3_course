@@ -2,7 +2,7 @@
 FLUTTER = flutter
 
 # Команда для генерации кода с build_runner
-generate: install-dependencies
+gen: install-dependencies
 	$(FLUTTER) pub run build_runner build --delete-conflicting-outputs
 
 # Устанавливаем зависимости (если их нет)

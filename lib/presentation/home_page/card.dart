@@ -13,7 +13,7 @@ class _CardPost extends StatefulWidget {
   factory _CardPost.fromData(CardPostData data,
           {OnLikeCallback onLike, VoidCallback? onTap}) =>
       _CardPost(
-        data.description,
+        data.description ?? "Описание съел енот",
         imageUrl: data.imageUrl,
         onLike: onLike,
         onTap: onTap,
@@ -112,7 +112,7 @@ class _CardPostState extends State<_CardPost> {
                           Positioned.fill(
                               child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
+                            child: Image.network(
                               widget.imageUrl!,
                               height: 200,
                               width: double.infinity,

@@ -13,11 +13,6 @@ MemesDto _$MemesDtoFromJson(Map<String, dynamic> json) => MemesDto(
     );
 
 MemDataDto _$MemDataDtoFromJson(Map<String, dynamic> json) => MemDataDto(
-      id: (json['id'] as num?)?.toInt(),
-      description: json['description'] as String?,
       url: json['url'] as String?,
-      type: json['type'] as String?,
-      width: (json['width'] as num?)?.toInt(),
-      height: (json['height'] as num?)?.toInt(),
-      ratio: (json['ratio'] as num?)?.toDouble(),
+      message: json['message'] as String?,
     );
