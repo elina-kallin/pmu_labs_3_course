@@ -22,20 +22,23 @@ class PotterRepository extends ApiInterface{
 
   @override
   Future<List<CardPostData>?> loadData() async {
-    //try{
-        // const String url = '$_baseUrl/memes/random$_apiKey';
-        // const String url = '$_baseUrl/random';
-        const String url = _baseUrl;
+    const String url = _baseUrl;
+    final List<CardPostData> data = [];
 
+    try {
+      for (int i = 0; i < 5; i++) { // 5 запросов
         final Response<dynamic> response = await _dio.get<Map<dynamic, dynamic>>(url);
         final MemDataDto dto = MemDataDto.fromJson(response.data as Map<String, dynamic>);
         final CardPostData cardPost = dto.toDomain();
-        // final List<CardPostData>? data = dto.data?.map((e) => e.toDomain()).toList();
-        List<CardPostData> data = [cardPost];
-        return data;
-
-    //} on DioException catch (e){
-      return null;
-    //}
+        data.add(cardPost); // Добавить результат в список
+      }
+      return data; // Вернуть список после завершения всех запросов
+    } on DioException catch (e) {
+      data.add(CardPostData(
+        description: "Не удалось загрузить данные, показано статическое изображение.",
+        imageUrl: "https://i.pinimg.com/736x/1d/a6/b4/1da6b436eaea738125e3bdba0c4f74b6.jpg",
+      ));
+    }
   }
+
 }
