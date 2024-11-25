@@ -14,5 +14,5 @@ MemesDto _$MemesDtoFromJson(Map<String, dynamic> json) => MemesDto(
 
 MemDataDto _$MemDataDtoFromJson(Map<String, dynamic> json) => MemDataDto(
       url: json['url'] as String?,
-      message: json['message'] as String?,
+      fileSizeBytes: (json['fileSizeBytes'] as num?)?.toInt(),
     );

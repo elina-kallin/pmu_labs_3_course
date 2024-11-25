@@ -15,7 +15,7 @@ class DetailsPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 4.0),
-            child: Image.asset(
+            child: Image.network(
               data.imageUrl ?? '',
               fit: BoxFit.cover,
               width: double.infinity,

@@ -40,7 +40,7 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final data = PotterRepository().loadData();
     return Center(
-      child: FutureBuilder(
+      child: FutureBuilder<List<CardPostData>?>(
         future: data,
         builder: (context, snapshot) => SingleChildScrollView(
           child: snapshot.hasData
