@@ -20,25 +20,27 @@ class PotterRepository extends ApiInterface {
 
   @override
   Future<List<CardPostData>?> loadData({String? q}) async {
-    const String url = "$_baseUrl /memes";
-    final List<CardPostData> data = [];
+    const String url = "$_baseUrl/memes";
 
-    try {
+    // try {
       final Response<dynamic> response = await _dio.get<Map<dynamic, dynamic>>(
-          url,
-          queryParameters: q != null ? {'filter[name_cont]': q} : null,
+        url,
+        queryParameters: q != null ? {'name': q} : null,
       );
       final MemesDto dto = MemesDto.fromJson(response.data as Map<String, dynamic>);
 
-      final List<CardPostData>? data = dto.data?.map((e)=>e.toDomain()).toList();
+      final List<CardPostData>? data =
+          dto.data?.map((e) => e.toDomain()).toList();
       return data; // Вернуть список после завершения всех запросов
-    } on DioException catch (e) {
-      data.add(CardPostData(
-        description:
-            "Не удалось загрузить данные, показано статическое изображение.",
-        imageUrl:
-            "https://i.pinimg.com/736x/1d/a6/b4/1da6b436eaea738125e3bdba0c4f74b6.jpg",
-      ));
-    }
+    // } on DioException catch (e) {
+
+    // } catch (e) {
+    // }
+      // data.add(CardPostData(
+      //   description:
+      //       "Не удалось загрузить данные, показано статическое изображение.",
+      //   imageUrl:
+      //       "https://i.pinimg.com/736x/1d/a6/b4/1da6b436eaea738125e3bdba0c4f74b6.jpg",
+      // ));
   }
 }
