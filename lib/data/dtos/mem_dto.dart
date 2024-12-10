@@ -14,27 +14,15 @@ class MemesDto {
 
 @JsonSerializable(createToJson: false)
 class MemDataDto {
-  // final int? id;
-  final int? fileSizeBytes;
-  // final int? width;
-  // final int? height;
-  // final String? description;
+  final int? id;
+  final String? name;
   final String? url;
-  // final String? type;
-  // final double? ratio;
-  // final String? message;
 
   const MemDataDto(
       {
-        // this.id,
-      // this.description,
+        this.id,
+      this.name,
       this.url,
-      this.fileSizeBytes,
-      // this.type,
-      // this.width,
-      // this.height,
-      // this.ratio,
-      // this.message
       });
 
   factory MemDataDto.fromJson(Map<String, dynamic> json) =>

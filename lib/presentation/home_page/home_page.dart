@@ -28,36 +28,73 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: _color,
         title: Text(widget.title),
       ),
-      body: const Body(),
+      body: Body(),
     );
   }
 }
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({super.key});
+
+  State<Body> createState() => _BodyState();
+}
+
+
+class _BodyState extends State<Body>{
+
+  final searchController = TextEditingController();
+  final repo = PotterRepository();
+  late Future<List<CardPostData>?> data;
+
+  @override
+  void initState(){
+    data = repo.loadData();
+    super.initState();
+  }
+
+  @override void dispose(){
+    searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final data = PotterRepository().loadData();
-    return Center(
-      child: FutureBuilder<List<CardPostData>?>(
-        future: data,
-        builder: (context, snapshot) => SingleChildScrollView(
-          child: snapshot.hasData
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: snapshot.data?.map((data) {
-                        return _CardPost.fromData(
-                          data,
-                          onLike: (String title, bool isLiked) =>
-                              _showSnackBar(context, title, isLiked),
-                          onTap: () => _navToDetails(context, data),
-                        );
-                      }).toList() ??
-                      [],
-                )
-              : const CircularProgressIndicator(),
-        ),
+
+    return Padding(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: CupertinoSearchTextField(
+              controller: searchController,
+              onChanged: (search) {
+                setState(() {
+                  data = repo.loadData(q: search);
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: FutureBuilder<List<CardPostData>?>(
+                future: data,
+                builder: (context, snapshot) => SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: snapshot.data?.map((data) { return _CardPost.fromData(
+                      data,
+                      onLike: (String name, bool isLiked) =>
+                          _showSnackBar(context, name, isLiked),
+                      onTap: () => _navToDetails(context, data),
+                    );
+                    }).toList() ?? [],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

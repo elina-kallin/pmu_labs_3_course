@@ -4,7 +4,7 @@ import 'package:pmu_labs/domain/models/card.dart';
 extension MemDataDtoToModel on MemDataDto {
   CardPostData toDomain() {
     // Список допустимых расширений
-    const allowedExtensions = ['jpg', 'jpeg', 'gif'];
+    const allowedExtensions = ['jpg', 'jpeg', 'gif', 'png'];
 
     // Проверка на наличие допустимого расширения
     bool isValidImageUrl(String? url) {
@@ -14,7 +14,7 @@ extension MemDataDtoToModel on MemDataDto {
     }
 
     return CardPostData(
-      description: isValidImageUrl(url) ? fileSizeBytes.toString() : "эх, изображения не будет, жержите вот такое",
+      description: isValidImageUrl(url) ? name.toString() : "эх, изображения не будет, жержите вот такое",
       imageUrl: isValidImageUrl(url)
           ? url!
           : "https://i.pinimg.com/736x/1d/a6/b4/1da6b436eaea738125e3bdba0c4f74b6.jpg",
