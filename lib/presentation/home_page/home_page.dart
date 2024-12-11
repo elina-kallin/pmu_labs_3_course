@@ -77,7 +77,9 @@ class _BodyState extends State<Body> {
             child: CupertinoSearchTextField(
               controller: searchController,
               onChanged: (search) {
-                Debounce.run(() => context.read<HomeBlock>().add(HomeLoadDataEvent(search: search)));
+                Debounce.run(() => context
+                    .read<HomeBlock>()
+                    .add(HomeLoadDataEvent(search: search)));
               },
             ),
           ),
@@ -121,7 +123,8 @@ class _BodyState extends State<Body> {
                             return data != null
                                 ? _CardPost.fromData(
                                     data,
-                                    onLike: (title, isLiked) => _showSnackBar(context, title, isLiked),
+                                    onLike: (title, isLiked) =>
+                                        _showSnackBar(context, title, isLiked),
                                     onTap: () => _navToDetails(context, data),
                                   )
                                 : const SizedBox.shrink();

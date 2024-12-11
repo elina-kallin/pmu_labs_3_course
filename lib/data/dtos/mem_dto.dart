@@ -4,9 +4,25 @@ part 'mem_dto.g.dart';
 
 @JsonSerializable(createToJson: false)
 class MemesDto {
+  final int? current;
+  final int? next;
+  final int? last;
+  final int? prevPage;
+  final int? pageSize;
+  final int? memesCount;
+  final int? pagesCount;
+
   final List<MemDataDto>? data;
 
-  const MemesDto({this.data});
+  const MemesDto(
+      this.current,
+      this.next,
+      this.last,
+      this.prevPage,
+      this.pageSize,
+      this.memesCount,
+      this.pagesCount,
+      {this.data});
 
   factory MemesDto.fromJson(Map<String, dynamic> json) =>
       _$MemesDtoFromJson(json);
@@ -18,12 +34,11 @@ class MemDataDto {
   final String? name;
   final String? url;
 
-  const MemDataDto(
-      {
-        this.id,
-      this.name,
-      this.url,
-      });
+  const MemDataDto({
+    this.id,
+    this.name,
+    this.url,
+  });
 
   factory MemDataDto.fromJson(Map<String, dynamic> json) =>
       _$MemDataDtoFromJson(json);
