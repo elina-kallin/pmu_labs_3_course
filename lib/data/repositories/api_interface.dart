@@ -1,5 +1,7 @@
-import 'package:pmu_labs/domain/models/card.dart';
+import 'package:pmu_labs/domain/models/home.dart';
+
+typedef OnErrorCallback = void Function(String? error);
 
 abstract class ApiInterface{
-  Future<List<CardPostData>?> loadData();
+  Future<HomeData?> loadData({OnErrorCallback? onError});
 }

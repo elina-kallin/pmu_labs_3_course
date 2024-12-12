@@ -1,10 +1,8 @@
-import 'dart:collection';
-
 import 'package:dio/dio.dart';
 import 'package:pmu_labs/data/dtos/mem_dto.dart';
 import 'package:pmu_labs/data/mappers/mem_mapper.dart';
 import 'package:pmu_labs/data/repositories/api_interface.dart';
-import 'package:pmu_labs/domain/models/card.dart';
+import 'package:pmu_labs/domain/models/home.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class PotterRepository extends ApiInterface {
@@ -19,28 +17,37 @@ class PotterRepository extends ApiInterface {
   static const String _baseUrl = 'https://mem-api.ekallin.ru/api';
 
   @override
-  Future<List<CardPostData>?> loadData({String? q}) async {
-    const String url = "$_baseUrl/memes";
-
+  Future<HomeData?> loadData({
+    OnErrorCallback? onError,
+    String? q,
+    int page = 0,
+    int pageSize = 25
+  }) async {
     // try {
+      const String url = "$_baseUrl/memes";
+
       final Response<dynamic> response = await _dio.get<Map<dynamic, dynamic>>(
         url,
-        queryParameters: q != null ? {'name': q} : null,
+        queryParameters: {
+          'name': q,
+          'pageNumber': page,
+          'pageSize': pageSize
+        },
       );
-      final MemesDto dto = MemesDto.fromJson(response.data as Map<String, dynamic>);
 
-      final List<CardPostData>? data =
-          dto.data?.map((e) => e.toDomain()).toList();
+      final MemesDto dto = MemesDto.fromJson(response.data as Map<String, dynamic>);
+      final HomeData data = dto.toDomain();
       return data; // Вернуть список после завершения всех запросов
     // } on DioException catch (e) {
-
-    // } catch (e) {
-    // }
+     // onError?.call(e.response?.statusMessage);
+     // return null;
+      // }
       // data.add(CardPostData(
       //   description:
       //       "Не удалось загрузить данные, показано статическое изображение.",
       //   imageUrl:
       //       "https://i.pinimg.com/736x/1d/a6/b4/1da6b436eaea738125e3bdba0c4f74b6.jpg",
       // ));
+    // }
   }
 }

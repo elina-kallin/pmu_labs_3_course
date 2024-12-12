@@ -48,21 +48,38 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   final searchController = TextEditingController();
-  final repo = PotterRepository();
-  late Future<List<CardPostData>?> data;
+  final scrollController = ScrollController();
+
+  // final repo = PotterRepository();
+  // late Future<List<CardPostData>?> data;
 
   @override
   void initState() {
-    // data = repo.loadData(); // Подгрузка начальных данных
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HomeBlock>().add(const HomeLoadDataEvent());
     });
+
+    scrollController.addListener(_onNextPageListener);
+
     super.initState();
+  }
+
+  void _onNextPageListener() {
+    if(scrollController.offset > scrollController.position.maxScrollExtent){
+      final bloc = context.read<HomeBlock>();
+      if(!bloc.state.isPaginationLoading){
+        bloc.add(HomeLoadDataEvent(
+          search: searchController.text,
+          nextPage: bloc.state.data?.nextPage
+        ));
+      }
+    }
   }
 
   @override
   void dispose() {
     searchController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -116,10 +133,11 @@ class _BodyState extends State<Body> {
                       child: RefreshIndicator(
                         onRefresh: _onRefresh,
                         child: ListView.builder(
+                          controller: scrollController,
                           padding: EdgeInsets.zero,
-                          itemCount: state.data?.length ?? 0,
+                          itemCount: state.data?.data?.length ?? 0,
                           itemBuilder: (context, index) {
-                            final data = state.data?[index];
+                            final data = state.data?.data?[index];
                             return data != null
                                 ? _CardPost.fromData(
                                     data,
@@ -132,6 +150,21 @@ class _BodyState extends State<Body> {
                         ),
                       ),
                     )
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 50,
+                width: 50,
+                child: BlocBuilder<HomeBlock, HomeState>(
+                  builder: (context, state) => state.isPaginationLoading
+                      ? const CircularProgressIndicator()
+                      : const SizedBox.shrink(),
+                ),
+              ),
+            ),
           ),
         ],
       ),

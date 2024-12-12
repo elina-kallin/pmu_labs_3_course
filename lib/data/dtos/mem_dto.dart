@@ -32,12 +32,12 @@ class MemesDto {
 class MemDataDto {
   final int? id;
   final String? name;
-  final String? url;
+  final String? imageUrl;
 
   const MemDataDto({
     this.id,
     this.name,
-    this.url,
+    this.imageUrl,
   });
 
   factory MemDataDto.fromJson(Map<String, dynamic> json) =>
