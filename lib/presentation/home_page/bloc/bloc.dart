@@ -21,7 +21,7 @@ class HomeBlock extends Bloc<HomeEvent, HomeState> {
     }
 
     final data =
-        await repository.loadData(q: event.search, page: event.nextPage ?? 1);
+        await repository.loadData(q: event.search, page: event.nextPage ?? 0);
 
     if(event.nextPage != null){
       data?.data?.insertAll(0, state.data?.data ?? []);

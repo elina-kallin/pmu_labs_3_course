@@ -114,30 +114,11 @@ class _CardPostState extends State<_CardPost> {
                             borderRadius: BorderRadius.circular(20),
                             child: Image.network(
                               widget.imageUrl!,
-                              height: 200,
+                              // height: 200,
                               width: double.infinity,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fitHeight,
                             ),
                           )),
-                          Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(20)),
-                                  color: Colors.orange),
-                              child: const Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Text(
-                                  "ОЧЕНЬ! вкусные мемы",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     )),

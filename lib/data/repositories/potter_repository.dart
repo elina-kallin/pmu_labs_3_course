@@ -21,7 +21,7 @@ class PotterRepository extends ApiInterface {
     OnErrorCallback? onError,
     String? q,
     int page = 0,
-    int pageSize = 25
+    int pageSize = 5
   }) async {
     // try {
       const String url = "$_baseUrl/memes";

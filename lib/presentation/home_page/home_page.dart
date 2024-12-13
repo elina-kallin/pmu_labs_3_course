@@ -65,14 +65,14 @@ class _BodyState extends State<Body> {
   }
 
   void _onNextPageListener() {
-    if(scrollController.offset > scrollController.position.maxScrollExtent){
-      final bloc = context.read<HomeBlock>();
-      if(!bloc.state.isPaginationLoading){
-        bloc.add(HomeLoadDataEvent(
-          search: searchController.text,
-          nextPage: bloc.state.data?.nextPage
-        ));
-      }
+    final bloc = context.read<HomeBlock>();
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 100 &&
+        !bloc.state.isPaginationLoading) {
+      bloc.add(HomeLoadDataEvent(
+        search: searchController.text,
+        nextPage: (bloc.state.data?.nextPage),
+      ));
     }
   }
 
