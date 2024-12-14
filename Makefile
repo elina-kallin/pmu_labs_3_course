@@ -5,6 +5,9 @@ FLUTTER = flutter
 gen: install-dependencies
 	$(FLUTTER) pub run build_runner build --delete-conflicting-outputs
 
+icon:
+	$(FLUTTER) pub run flutter_launcher_icons:main
+
 # Устанавливаем зависимости (если их нет)
 install-dependencies:
 	$(FLUTTER) pub get
