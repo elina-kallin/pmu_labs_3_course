@@ -67,7 +67,7 @@ class _BodyState extends State<Body> {
   void _onNextPageListener() {
     final bloc = context.read<HomeBlock>();
     if (scrollController.position.pixels >=
-        scrollController.position.maxScrollExtent - 100 &&
+            scrollController.position.maxScrollExtent - 10 &&
         !bloc.state.isPaginationLoading) {
       bloc.add(HomeLoadDataEvent(
         search: searchController.text,
@@ -100,57 +100,34 @@ class _BodyState extends State<Body> {
               },
             ),
           ),
-
-          //     Expanded(
-          //       child: Center(
-          //         child: FutureBuilder<List<CardPostData>?>(
-          //           future: data,
-          //           builder: (context, snapshot) => SingleChildScrollView(
-          //             child: snapshot.hasData
-          //                 ? Column(
-          //               mainAxisAlignment: MainAxisAlignment.center,
-          //               children: snapshot.data?.map((data) {
-          //                 return _CardPost.fromData(
-          //                   data,
-          //                   onLike: (title, isLiked) =>
-          //                       _showSnackBar(context, title, isLiked),
-          //                   onTap: () => _navToDetails(context, data),
-          //                 );
-          //               }).toList() ??
-          //                   [],
-          //             )
-          //                 : const CircularProgressIndicator(),
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
           BlocBuilder<HomeBlock, HomeState>(
-              builder: (context, state) => state.isLoading
-                  ? const CircularProgressIndicator()
-                  : Expanded(
-                      child: RefreshIndicator(
-                        onRefresh: _onRefresh,
-                        child: ListView.builder(
-                          controller: scrollController,
-                          padding: EdgeInsets.zero,
-                          itemCount: state.data?.data?.length ?? 0,
-                          itemBuilder: (context, index) {
-                            final data = state.data?.data?[index];
-                            return data != null
-                                ? _CardPost.fromData(
-                                    data,
-                                    onLike: (title, isLiked) =>
-                                        _showSnackBar(context, title, isLiked),
-                                    onTap: () => _navToDetails(context, data),
-                                  )
-                                : const SizedBox.shrink();
-                          },
-                        ),
-                      ),
-                    )
-          ),
+              builder: (context, state) => state.error != null
+                  ? Text(state.error ?? '')
+                  : state.isLoading
+                      ? const CircularProgressIndicator()
+                      : Expanded(
+                          child: RefreshIndicator(
+                            onRefresh: _onRefresh,
+                            child: ListView.builder(
+                              controller: scrollController,
+                              padding: EdgeInsets.zero,
+                              itemCount: state.data?.data?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                final data = state.data?.data?[index];
+                                return data != null
+                                    ? _CardPost.fromData(
+                                        data,
+                                        onLike: (title, isLiked) =>
+                                            _showSnackBar(
+                                                context, title, isLiked),
+                                        onTap: () =>
+                                            _navToDetails(context, data),
+                                      )
+                                    : const SizedBox.shrink();
+                              },
+                            ),
+                          ),
+                        )),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(

@@ -17,37 +17,26 @@ class PotterRepository extends ApiInterface {
   static const String _baseUrl = 'https://mem-api.ekallin.ru/api';
 
   @override
-  Future<HomeData?> loadData({
-    OnErrorCallback? onError,
-    String? q,
-    int page = 0,
-    int pageSize = 5
-  }) async {
-    // try {
+  Future<HomeData?> loadData(
+      {OnErrorCallback? onError,
+      String? q,
+      int page = 0,
+      int pageSize = 5}) async {
+    try {
       const String url = "$_baseUrl/memes";
 
       final Response<dynamic> response = await _dio.get<Map<dynamic, dynamic>>(
         url,
-        queryParameters: {
-          'name': q,
-          'pageNumber': page,
-          'pageSize': pageSize
-        },
+        queryParameters: {'name': q, 'pageNumber': page, 'pageSize': pageSize},
       );
 
-      final MemesDto dto = MemesDto.fromJson(response.data as Map<String, dynamic>);
+      final MemesDto dto =
+          MemesDto.fromJson(response.data as Map<String, dynamic>);
       final HomeData data = dto.toDomain();
       return data; // Вернуть список после завершения всех запросов
-    // } on DioException catch (e) {
-     // onError?.call(e.response?.statusMessage);
-     // return null;
-      // }
-      // data.add(CardPostData(
-      //   description:
-      //       "Не удалось загрузить данные, показано статическое изображение.",
-      //   imageUrl:
-      //       "https://i.pinimg.com/736x/1d/a6/b4/1da6b436eaea738125e3bdba0c4f74b6.jpg",
-      // ));
-    // }
+    } on DioException catch (e) {
+      onError?.call(e.response?.statusMessage);
+      return null;
+    }
   }
 }
