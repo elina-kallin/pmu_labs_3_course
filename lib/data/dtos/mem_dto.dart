@@ -23,7 +23,7 @@ class MemesDto {
 
 @JsonSerializable(createToJson: false)
 class MemDataDto {
-  final int? id;
+  final String? id;
   final String? name;
   final String? imageUrl;
 

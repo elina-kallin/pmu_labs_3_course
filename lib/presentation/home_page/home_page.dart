@@ -11,6 +11,9 @@ import 'package:pmu_labs/presentation/details_page/details_page.dart';
 import 'package:pmu_labs/presentation/home_page/bloc/bloc.dart';
 import 'package:pmu_labs/presentation/home_page/bloc/events.dart';
 import 'package:pmu_labs/presentation/home_page/bloc/state.dart';
+import 'package:pmu_labs/presentation/like_bloc/like_bloc.dart';
+import 'package:pmu_labs/presentation/like_bloc/like_event.dart';
+import 'package:pmu_labs/presentation/like_bloc/like_state.dart';
 import 'package:pmu_labs/presentation/locale_bloc/locale_bloc.dart';
 import 'package:pmu_labs/presentation/locale_bloc/locale_event.dart';
 import 'package:pmu_labs/presentation/locale_bloc/locale_state.dart';
@@ -58,6 +61,7 @@ class _BodyState extends State<Body> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HomeBlock>().add(const HomeLoadDataEvent());
+      context.read<LikeBloc>().add(const LoadLikesEvent());
     });
 
     scrollController.addListener(_onNextPageListener);
@@ -65,9 +69,12 @@ class _BodyState extends State<Body> {
     super.initState();
   }
 
+
+
   void _onNextPageListener() {
     final bloc = context.read<HomeBlock>();
-    if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 10 &&
+    if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 10 &&
         !bloc.state.isPaginationLoading) {
       bloc.add(HomeLoadDataEvent(
         search: searchController.text,
@@ -99,57 +106,66 @@ class _BodyState extends State<Body> {
                     controller: searchController,
                     placeholder: context.locale.search,
                     onChanged: (search) {
-                      Debounce.run(
-                          () => context.read<HomeBlock>().add(HomeLoadDataEvent(search: search)));
+                      Debounce.run(() => context
+                          .read<HomeBlock>()
+                          .add(HomeLoadDataEvent(search: search)));
                     },
                   ),
                 ),
               ),
               GestureDetector(
-                onTap: () => context.read<LocaleBloc>().add(const ChangeLocaleEvent()),
+                onTap: () =>
+                    context.read<LocaleBloc>().add(const ChangeLocaleEvent()),
                 child: SizedBox.square(
                   dimension: 50,
                   child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: BlocBuilder<LocaleBloc, LocaleState>(
-                        builder: (context, state) {
-                          return state.currentLocale.languageCode == 'ru'
-                              ? const SvgRu()
-                              : const SvgUk();
-                        },
-                      ),
+                    padding: const EdgeInsets.all(12),
+                    child: BlocBuilder<LocaleBloc, LocaleState>(
+                      builder: (context, state) {
+                        return state.currentLocale.languageCode == 'ru'
+                            ? const SvgRu()
+                            : const SvgUk();
+                      },
+                    ),
                   ),
-
                 ),
               )
             ],
           ),
           BlocBuilder<HomeBlock, HomeState>(
-              builder: (context, state) => state.error != null
-                  ? Text(state.error ?? '')
-                  : state.isLoading
-                      ? const CircularProgressIndicator()
-                      : Expanded(
-                          child: RefreshIndicator(
-                            onRefresh: _onRefresh,
-                            child: ListView.builder(
-                              controller: scrollController,
-                              padding: EdgeInsets.zero,
-                              itemCount: state.data?.data?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                final data = state.data?.data?[index];
-                                return data != null
-                                    ? _CardPost.fromData(
-                                        data,
-                                        onLike: (title, isLiked) =>
-                                            _showSnackBar(context, title, isLiked),
-                                        onTap: () => _navToDetails(context, data),
-                                      )
-                                    : const SizedBox.shrink();
-                              },
+            builder: (context, state) => state.error != null
+                ? Text(state.error ?? '')
+                : state.isLoading
+                    ? const CircularProgressIndicator()
+                    : BlocBuilder<LikeBloc, LikeState>(
+                        builder: (context, likeState) {
+                          return Expanded(
+                            child: RefreshIndicator(
+                              onRefresh: _onRefresh,
+                              child: ListView.builder(
+                                controller: scrollController,
+                                padding: EdgeInsets.zero,
+                                itemCount: state.data?.data?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  final data = state.data?.data?[index];
+                                  return data != null
+                                      ? _CardPost.fromData(
+                                          data,
+                                          onLike: _onLike,
+                                          isLiked: likeState.likedIds
+                                                  ?.contains(data.id) ==
+                                              true,
+                                          onTap: () =>
+                                              _navToDetails(context, data),
+                                        )
+                                      : const SizedBox.shrink();
+                                },
+                              ),
                             ),
-                          ),
-                        )),
+                          );
+                        },
+                      ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -170,8 +186,17 @@ class _BodyState extends State<Body> {
     );
   }
 
+  void _onLike(String? id, String title, bool isLiked) {
+    if (id != null) {
+      context.read<LikeBloc>().add(ChangeLikeEvent(id));
+      _showSnackBar(context, title, !isLiked);
+    }
+  }
+
   Future<void> _onRefresh() {
-    context.read<HomeBlock>().add(HomeLoadDataEvent(search: searchController.text));
+    context
+        .read<HomeBlock>()
+        .add(HomeLoadDataEvent(search: searchController.text));
     return Future.value(null);
   }
 
@@ -196,5 +221,7 @@ class _BodyState extends State<Body> {
         duration: const Duration(seconds: 2),
       ));
     });
+
+
   }
 }

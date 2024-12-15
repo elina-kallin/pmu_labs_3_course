@@ -23,6 +23,7 @@ extension MemDataDtoToModel on MemDataDto {
           ? name.toString()
           : "эх, изображения не будет, жержите вот такое",
       imageUrl: isValidImageUrl(imageUrl) ? imageUrl! : "https://mem-api.ekallin.ru/images/2.png",
+      id: id,
     );
   }
 }

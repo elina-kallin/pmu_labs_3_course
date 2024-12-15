@@ -20,7 +20,7 @@ MemesDto _$MemesDtoFromJson(Map<String, dynamic> json) => MemesDto(
     );
 
 MemDataDto _$MemDataDtoFromJson(Map<String, dynamic> json) => MemDataDto(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'] as String?,
       name: json['name'] as String?,
       imageUrl: json['imageUrl'] as String?,
     );

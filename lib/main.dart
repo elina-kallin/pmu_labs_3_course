@@ -6,6 +6,7 @@ import 'package:pmu_labs/components/locale/l10n/app_locale.dart';
 import 'package:pmu_labs/data/repositories/potter_repository.dart';
 import 'package:pmu_labs/presentation/home_page/bloc/bloc.dart';
 import 'package:pmu_labs/presentation/home_page/home_page.dart';
+import 'package:pmu_labs/presentation/like_bloc/like_bloc.dart';
 import 'package:pmu_labs/presentation/locale_bloc/locale_bloc.dart';
 import 'package:pmu_labs/presentation/locale_bloc/locale_event.dart';
 import 'package:pmu_labs/presentation/locale_bloc/locale_state.dart';
@@ -33,11 +34,15 @@ class MyApp extends StatelessWidget {
             home: RepositoryProvider<PotterRepository>(
               lazy: true,
               create: (_) => PotterRepository(),
-              child: BlocProvider<HomeBlock>(
-                  lazy: false,
-                  create: (context) =>
-                      HomeBlock(context.read<PotterRepository>()),
-                  child: const MyHomePage(title: 'Бакальская Елена')),
+              child: BlocProvider<LikeBloc>(
+                lazy: true,
+                create: (context) => LikeBloc(),
+                child: BlocProvider<HomeBlock>(
+                    lazy: false,
+                    create: (context) =>
+                        HomeBlock(context.read<PotterRepository>()),
+                    child: const MyHomePage(title: 'Бакальская Елена')),
+              ),
             ),
           );
         },

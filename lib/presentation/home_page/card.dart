@@ -1,49 +1,32 @@
 part of 'home_page.dart';
 
-typedef OnLikeCallback = void Function(String title, bool isLiked)?;
+typedef OnLikeCallback = void Function(String? id, String title, bool isLiked)?;
 
-class _CardPost extends StatefulWidget {
+class _CardPost extends StatelessWidget {
   final String description;
   final String? imageUrl;
+  final String? id;
   final OnLikeCallback onLike;
   final VoidCallback? onTap;
+  final bool isLiked;
 
-  const _CardPost(this.description, {this.imageUrl, this.onLike, this.onTap});
+  const _CardPost(this.description, {this.imageUrl, this.onLike, this.onTap, this.id, this.isLiked = false});
 
-  factory _CardPost.fromData(CardPostData data, {OnLikeCallback onLike, VoidCallback? onTap}) =>
+  factory _CardPost.fromData(CardPostData data, {OnLikeCallback onLike, VoidCallback? onTap, bool isLiked = false}) =>
       _CardPost(
         data.description ?? "Описание съел енот",
         imageUrl: data.imageUrl,
         onLike: onLike,
         onTap: onTap,
+        isLiked: isLiked,
+        id: data.id,
       );
 
-  @override
-  State<_CardPost> createState() => _CardPostState();
-}
-
-class _CardPostState extends State<_CardPost> {
-  bool isLiked = false;
-  double iconScale = 1.0;
-
-  void _onLikeTap() {
-    setState(() {
-      isLiked = !isLiked;
-      iconScale = 2.0; // Increase scale temporarily
-    });
-
-    // Reset the scale back to normal after 250 milliseconds
-    Timer(const Duration(milliseconds: 110), () {
-      setState(() {
-        iconScale = 1.0;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(10),
@@ -75,7 +58,7 @@ class _CardPostState extends State<_CardPost> {
                 children: [
                   Flexible(
                     child: Text(
-                      widget.description,
+                      description,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -87,7 +70,7 @@ class _CardPostState extends State<_CardPost> {
               // IMAGE ROW
 
               const SizedBox(height: 10),
-              if (widget.imageUrl != null)
+              if (imageUrl != null)
                 Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -112,7 +95,7 @@ class _CardPostState extends State<_CardPost> {
                               child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.network(
-                              widget.imageUrl!,
+                              imageUrl!,
                               // height: 200,
                               width: double.infinity,
                               fit: BoxFit.fitHeight,
@@ -127,38 +110,20 @@ class _CardPostState extends State<_CardPost> {
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: GestureDetector(
-                    onTap: () {
-                      // _onLikeTap;
-                      setState(() {
-                        isLiked = !isLiked;
-                        iconScale = 2.0; // Increase scale temporarily
-                      });
-
-                      // Reset the scale back to normal after 250 milliseconds
-                      Timer(const Duration(milliseconds: 110), () {
-                        setState(() {
-                          iconScale = 1.0;
-                        });
-                      });
-                      widget.onLike?.call(widget.description, isLiked);
-                    },
-                    child: AnimatedScale(
-                      scale: iconScale,
+                    onTap: () => onLike?.call(id, description, isLiked),
+                    child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 250),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        child: !isLiked
-                            ? const Icon(
-                                Icons.favorite_border,
-                                color: Colors.black,
-                                key: ValueKey<int>(0),
-                              )
-                            : const Icon(
-                                Icons.favorite,
-                                color: Colors.orange,
-                                key: ValueKey<int>(1),
-                              ),
-                      ),
+                      child: !isLiked
+                          ? const Icon(
+                              Icons.favorite_border,
+                              color: Colors.black,
+                              key: ValueKey<int>(0),
+                            )
+                          : const Icon(
+                              Icons.favorite,
+                              color: Colors.orange,
+                              key: ValueKey<int>(1),
+                            ),
                     ),
                   ),
                 ),
