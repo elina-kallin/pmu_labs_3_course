@@ -10,8 +10,7 @@ class _CardPost extends StatefulWidget {
 
   const _CardPost(this.description, {this.imageUrl, this.onLike, this.onTap});
 
-  factory _CardPost.fromData(CardPostData data,
-          {OnLikeCallback onLike, VoidCallback? onTap}) =>
+  factory _CardPost.fromData(CardPostData data, {OnLikeCallback onLike, VoidCallback? onTap}) =>
       _CardPost(
         data.description ?? "Описание съел енот",
         imageUrl: data.imageUrl,
@@ -171,10 +170,3 @@ class _CardPostState extends State<_CardPost> {
     );
   }
 }
-
-// class CardPostData {
-//   final String description;
-//   final String? imageUrl;
-//
-//   CardPostData(this.description, {this.imageUrl});
-// }

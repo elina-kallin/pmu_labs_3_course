@@ -8,6 +8,19 @@ gen: install-dependencies
 icon:
 	$(FLUTTER) pub run flutter_launcher_icons:main
 
+init_res:
+	dart pub global activate flutter_asset_generator
+
+format:
+	dart format . --line-length 100
+
+res:
+	fgen --output lib/components/resoures.g.dart --no-watch --no-preview; \
+	nmake format
+
+loc:
+	flutter gen-l10n &&	nmake format
+
 # Устанавливаем зависимости (если их нет)
 install-dependencies:
 	$(FLUTTER) pub get

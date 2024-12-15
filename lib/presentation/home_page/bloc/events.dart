@@ -1,8 +1,8 @@
-abstract class HomeEvent{
-  const HomeEvent ();
+abstract class HomeEvent {
+  const HomeEvent();
 }
 
-class HomeLoadDataEvent extends HomeEvent{
+class HomeLoadDataEvent extends HomeEvent {
   final String? search;
   final int? nextPage;
 

@@ -14,18 +14,11 @@ class MemesDto {
 
   final List<MemDataDto>? data;
 
-  const MemesDto(
-      this.current,
-      this.next,
-      this.last,
-      this.prevPage,
-      this.pageSize,
-      this.memesCount,
+  const MemesDto(this.current, this.next, this.last, this.prevPage, this.pageSize, this.memesCount,
       this.pagesCount,
       {this.data});
 
-  factory MemesDto.fromJson(Map<String, dynamic> json) =>
-      _$MemesDtoFromJson(json);
+  factory MemesDto.fromJson(Map<String, dynamic> json) => _$MemesDtoFromJson(json);
 }
 
 @JsonSerializable(createToJson: false)
@@ -40,6 +33,5 @@ class MemDataDto {
     this.imageUrl,
   });
 
-  factory MemDataDto.fromJson(Map<String, dynamic> json) =>
-      _$MemDataDtoFromJson(json);
+  factory MemDataDto.fromJson(Map<String, dynamic> json) => _$MemDataDtoFromJson(json);
 }

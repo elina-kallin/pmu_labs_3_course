@@ -18,10 +18,7 @@ class PotterRepository extends ApiInterface {
 
   @override
   Future<HomeData?> loadData(
-      {OnErrorCallback? onError,
-      String? q,
-      int page = 0,
-      int pageSize = 5}) async {
+      {OnErrorCallback? onError, String? q, int page = 0, int pageSize = 5}) async {
     try {
       const String url = "$_baseUrl/memes";
 
@@ -30,8 +27,7 @@ class PotterRepository extends ApiInterface {
         queryParameters: {'name': q, 'pageNumber': page, 'pageSize': pageSize},
       );
 
-      final MemesDto dto =
-          MemesDto.fromJson(response.data as Map<String, dynamic>);
+      final MemesDto dto = MemesDto.fromJson(response.data as Map<String, dynamic>);
       final HomeData data = dto.toDomain();
       return data; // Вернуть список после завершения всех запросов
     } on DioException catch (e) {

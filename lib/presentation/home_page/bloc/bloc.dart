@@ -12,8 +12,7 @@ class HomeBlock extends Bloc<HomeEvent, HomeState> {
     on<HomeLoadDataEvent>(_onLoadData);
   }
 
-  Future<void> _onLoadData(
-      HomeLoadDataEvent event, Emitter<HomeState> emit) async {
+  Future<void> _onLoadData(HomeLoadDataEvent event, Emitter<HomeState> emit) async {
     if (event.nextPage == null) {
       emit(state.copyWith(isLoading: true));
     } else {
@@ -22,22 +21,16 @@ class HomeBlock extends Bloc<HomeEvent, HomeState> {
 
     String? error;
 
-    final data =
-        await repository.loadData(
-            q: event.search,
-            page: event.nextPage ?? 0,
-          onError: (e) => error = e,
-        );
+    final data = await repository.loadData(
+      q: event.search,
+      page: event.nextPage ?? 0,
+      onError: (e) => error = e,
+    );
 
-    if(event.nextPage != null){
+    if (event.nextPage != null) {
       data?.data?.insertAll(0, state.data?.data ?? []);
     }
 
-    emit(state.copyWith(
-      isLoading: false,
-      isPaginationLoading: false,
-      data: data,
-      error: error
-    ));
+    emit(state.copyWith(isLoading: false, isPaginationLoading: false, data: data, error: error));
   }
 }

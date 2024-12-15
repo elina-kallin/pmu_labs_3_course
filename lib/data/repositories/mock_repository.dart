@@ -8,14 +8,11 @@ class MockRepository extends ApiInterface {
   Future<HomeData?> loadData({OnErrorCallback? onError}) async {
     return HomeData(data: [
       CardPostData(
-          description: "Третья из списка каточек ыть",
-          imageUrl: "https://random-d.uk/api/214.jpg"),
+          description: "Третья из списка каточек ыть", imageUrl: "https://random-d.uk/api/214.jpg"),
       CardPostData(
-          description: "Третья из списка каточек ыть",
-          imageUrl: "https://random-d.uk/api/214.jpg"),
+          description: "Третья из списка каточек ыть", imageUrl: "https://random-d.uk/api/214.jpg"),
       CardPostData(
-          description: "Третья из списка каточек ыть",
-          imageUrl: "https://random-d.uk/api/214.jpg"),
+          description: "Третья из списка каточек ыть", imageUrl: "https://random-d.uk/api/214.jpg"),
     ]);
   }
 }
